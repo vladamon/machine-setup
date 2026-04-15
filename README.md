@@ -22,6 +22,10 @@ and `ripgrep`, then symlinks the configs to their correct locations.
 
 **System dependencies installed via Homebrew:** `tmux`, `neovim`, `ripgrep`
 
+**Nerd Font required for icons:** Neo-tree uses `nvim-web-devicons` which needs a
+[Nerd Font](https://www.nerdfonts.com) installed and set as your terminal's font.
+Without it, file icons in the explorer will render as broken boxes.
+
 ## First launch
 
 **Tmux:**

@@ -1,7 +1,7 @@
 # NeoVim Configuration
 
-Config: `nvim/init.lua` → symlinked to `~/.config/nvim/init.lua`
-Lock file: `nvim/lazy-lock.json` → pins exact plugin versions
+Config: `nvim/` directory → symlinked as `~/.config/nvim/`
+Lock file: `nvim/lazy-lock.json` → accessible via the directory symlink
 
 ---
 
@@ -120,7 +120,7 @@ emulator preferences.
 },
 ```
 
-Run `:Lazy sync` inside NeoVim to install. Commit both `init.lua` and the
+Run `:Lazy install` inside NeoVim to install. Commit both `init.lua` and the
 updated `nvim/lazy-lock.json`.
 
 **Update all plugins:** Inside NeoVim: `:Lazy update`

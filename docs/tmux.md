@@ -55,7 +55,7 @@ or running long test suites.
 set -sg escape-time 0
 ```
 
-By default tmux waits 10ms after `Esc` to check for escape sequences.
+By default tmux waits 500ms after `Esc` to check for escape sequences.
 This causes visible lag in NeoVim when leaving insert mode. Setting it to
 0 eliminates the delay entirely.
 

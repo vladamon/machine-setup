@@ -11,3 +11,4 @@ Icon
 
 # Backups created by install.sh
 *.bak
+*.bak.*

@@ -19,6 +19,14 @@ vim.opt.splitbelow = true
 
 -- lazy.nvim bootstrap
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.uv.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
@@ -49,6 +57,12 @@ require("lazy").setup({
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "lua", "python", "javascript", "typescript", "bash", "json", "yaml" },
+        highlight = { enable = true },
+      })
+    end,
   },
   {
     "neovim/nvim-lspconfig",
@@ -69,10 +83,9 @@ require("lazy").setup({
 })
 
 -- telescope shortcuts
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>f", builtin.find_files, {})
-vim.keymap.set("n", "<leader>g", builtin.live_grep, {})
-vim.keymap.set("n", "<leader>b", builtin.buffers, {})
+vim.keymap.set("n", "<leader>f", function() require("telescope.builtin").find_files() end, { desc = "Find files" })
+vim.keymap.set("n", "<leader>g", function() require("telescope.builtin").live_grep() end, { desc = "Live grep" })
+vim.keymap.set("n", "<leader>b", function() require("telescope.builtin").buffers() end, { desc = "Buffers" })
 
 -- neo-tree
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Neo-tree" })

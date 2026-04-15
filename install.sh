@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT="$(realpath "${BASH_SOURCE[0]}" 2>/dev/null || readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || "${BASH_SOURCE[0]}")"
+DOTFILES_DIR="$(cd "$(dirname "$SCRIPT")" && pwd)"
 
 # Colors
 GREEN='\033[0;32m'
@@ -10,7 +11,7 @@ NC='\033[0m'
 
 ok()     { printf "${GREEN}[OK]${NC}        %s\n" "$1"; }
 skip()   { printf "${YELLOW}[SKIP]${NC}      %s\n" "$1"; }
-backed() { printf "${YELLOW}[BACKED UP]${NC} %s → %s.bak\n" "$1" "$1"; }
+backed() { printf "${YELLOW}[BACKED UP]${NC} %s → %s\n" "$1" "$2"; }
 
 echo "── Dotfiles bootstrap ───────────────────────────────────"
 echo ""
@@ -19,6 +20,12 @@ echo ""
 echo "Checking Homebrew..."
 if ! command -v brew &>/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  # Bring brew into PATH for the remainder of this script
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
   ok "Homebrew installed"
 else
   skip "Homebrew already present"
@@ -49,8 +56,9 @@ symlink() {
 
   # Exists but is not our symlink — back it up
   if [ -e "$dst" ] || [ -L "$dst" ]; then
-    mv "$dst" "${dst}.bak"
-    backed "$dst"
+    local backup="${dst}.bak.$(date +%Y%m%d%H%M%S)"
+    mv "$dst" "$backup"
+    backed "$dst" "$backup"
   fi
 
   mkdir -p "$(dirname "$dst")"

@@ -2,6 +2,12 @@
 .DS_Store
 .AppleDouble
 .LSOverride
+Icon
+
+# Editor
+*.swp
+*.swo
+*~
 
 # Backups created by install.sh
 *.bak

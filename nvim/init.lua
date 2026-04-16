@@ -58,9 +58,13 @@ require("lazy").setup({
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = { "lua", "python", "javascript", "typescript", "bash", "json", "yaml" },
-        highlight = { enable = true },
+      require("nvim-treesitter.install").install(
+        { "lua", "python", "javascript", "typescript", "bash", "json", "yaml" }
+      )
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+        end,
       })
     end,
   },

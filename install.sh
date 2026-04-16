@@ -43,6 +43,20 @@ for pkg in tmux neovim ripgrep; do
   fi
 done
 
+# ── Node / tree-sitter CLI ───────────────────────────────────
+echo ""
+echo "Checking Node.js tooling..."
+if ! command -v npm &>/dev/null; then
+  echo "  npm not found — install Node.js (e.g. via nvm) then re-run."
+else
+  if npm list -g tree-sitter-cli --depth=0 &>/dev/null 2>&1; then
+    skip "tree-sitter-cli"
+  else
+    npm install -g tree-sitter-cli --silent
+    ok "tree-sitter-cli installed"
+  fi
+fi
+
 # ── Symlink helper ───────────────────────────────────────────
 symlink() {
   local src="$1"

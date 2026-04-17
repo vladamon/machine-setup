@@ -10,30 +10,29 @@ if tmux has-session -t "$SESSION" 2>/dev/null; then
 fi
 
 # ── Window 1: main ───────────────────────────────────────────
-# Layout:  nvim (top-left) | lazygit (right, full height)
-#          shell / agent   |
+# Layout:  nvim (left) | agent terminal (right)
 tmux new-session -d -s "$SESSION" -n main
-
-tmux send-keys    -t "$SESSION:main"   'nvim .' C-m
+tmux send-keys    -t "$SESSION:main" 'nvim .' C-m
 tmux split-window -h -t "$SESSION:main"
-tmux send-keys    -t "$SESSION:main"   'lazygit' C-m
-tmux split-window -v -t "$SESSION:main.0"
 tmux select-pane  -t "$SESSION:main.0"
 
-# ── Window 2: servers ─────────────────────────────────────────
-# Layout:  server-a (left) | server-b (right)
+# ── Window 2: git ─────────────────────────────────────────────
+tmux new-window  -t "$SESSION" -n git
+tmux send-keys   -t "$SESSION:git" 'lazygit' C-m
+
+# ── Window 3: servers ─────────────────────────────────────────
+# Layout:  left | right
 tmux new-window   -t "$SESSION" -n servers
 tmux split-window -h -t "$SESSION:servers"
 tmux select-pane  -t "$SESSION:servers.0"
 
-# ── Window 3: ops ─────────────────────────────────────────────
-# Layout:  commands (top)
-#          output / monitoring (bottom)
+# ── Window 4: ops ─────────────────────────────────────────────
+# Layout:  left | right
 tmux new-window   -t "$SESSION" -n ops
-tmux split-window -v -t "$SESSION:ops"
+tmux split-window -h -t "$SESSION:ops"
 tmux select-pane  -t "$SESSION:ops.0"
 
-# ── Window 4: misc ────────────────────────────────────────────
+# ── Window 5: misc ────────────────────────────────────────────
 tmux new-window -t "$SESSION" -n misc
 
 # ── Focus main window, nvim pane ──────────────────────────────

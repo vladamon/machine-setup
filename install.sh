@@ -103,6 +103,7 @@ symlink "$DOTFILES_DIR/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
 # ── Dev launcher ─────────────────────────────────────────────
 echo ""
 echo "Linking dev launcher..."
+mkdir -p "$HOME/bin"
 symlink "$DOTFILES_DIR/bin/dev" "$HOME/bin/dev"
 symlink "$DOTFILES_DIR/bin/dev" "$HOME/bin/vlad-dev"
 

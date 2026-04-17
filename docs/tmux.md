@@ -79,6 +79,16 @@ bind r source-file ~/.tmux.conf \; display-message "tmux config reloaded"
 `Prefix+r` reloads the config without restarting tmux. The status bar
 message confirms the reload completed.
 
+## Lazygit split
+
+```
+bind g split-window -h -l 50% lazygit
+```
+
+`Prefix+g` opens lazygit in a 50% side pane instantly. Close the pane with
+`q` inside lazygit. This replaces the manual `Prefix+| → lazygit` sequence
+and keeps the standard workflow: Neovim on the left, lazygit on the right.
+
 ---
 
 ## Key reference
@@ -89,6 +99,7 @@ message confirms the reload completed.
 | `Prefix + \|` | Split pane horizontally |
 | `Prefix + -` | Split pane vertically |
 | `Prefix + r` | Reload config |
+| `Prefix + g` | Open lazygit in a side pane |
 | `Prefix + [` | Enter scroll/copy mode (use arrow keys or vi keys) |
 | `Prefix + d` | Detach from session |
 | `Prefix + c` | New window |

@@ -81,6 +81,35 @@ require("lazy").setup({
       require("neo-tree").setup({})
     end,
   },
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup({
+        current_line_blame = false,
+        preview_config = { border = "rounded" },
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+          local function map(mode, lhs, rhs, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, lhs, rhs, opts)
+          end
+          map("n", "]h",          gs.next_hunk,                              { desc = "Next hunk" })
+          map("n", "[h",          gs.prev_hunk,                              { desc = "Prev hunk" })
+          map("n", "<leader>hp",  gs.preview_hunk,                           { desc = "Preview hunk" })
+          map("n", "<leader>hi",  gs.preview_hunk_inline,                    { desc = "Preview hunk inline" })
+          map("n", "<leader>hs",  gs.stage_hunk,                             { desc = "Stage hunk" })
+          map("n", "<leader>hr",  gs.reset_hunk,                             { desc = "Reset hunk" })
+          map("n", "<leader>hb",  function() gs.blame_line({ full = true }) end, { desc = "Blame line" })
+        end,
+      })
+    end,
+  },
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles" },
+  },
 })
 
 -- telescope shortcuts
@@ -96,3 +125,7 @@ vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-k>", "<C-w>k")
+
+-- diffview: side-by-side diff of all changed files
+vim.keymap.set("n", "<leader>dv", "<cmd>DiffviewOpen<CR>", { desc = "Open Diffview" })
+vim.keymap.set("n", "<leader>dx", "<cmd>DiffviewClose<CR>", { desc = "Close Diffview" })

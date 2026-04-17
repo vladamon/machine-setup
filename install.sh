@@ -34,7 +34,7 @@ fi
 # ── Packages ─────────────────────────────────────────────────
 echo ""
 echo "Checking packages..."
-for pkg in tmux neovim ripgrep; do
+for pkg in tmux neovim ripgrep lazygit git-delta; do
   if brew list --formula "$pkg" &>/dev/null 2>&1; then
     skip "$pkg"
   else
@@ -90,6 +90,16 @@ echo ""
 echo "Linking NeoVim config..."
 symlink "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
+# ── Git (delta pager) ────────────────────────────────────────
+echo ""
+echo "Linking Git config..."
+symlink "$DOTFILES_DIR/git/config" "$HOME/.config/git/config"
+
+# ── Lazygit ──────────────────────────────────────────────────
+echo ""
+echo "Linking Lazygit config..."
+symlink "$DOTFILES_DIR/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
+
 echo ""
 echo "────────────────────────────────────────────────────────"
 echo "Bootstrap complete."
@@ -98,3 +108,4 @@ echo "Next steps:"
 echo "  1. Start a new tmux session:  tmux new -s main"
 echo "  2. Open NeoVim:               nvim"
 echo "     Plugins install automatically on first launch."
+echo "  3. Launch lazygit in a tmux split: lazygit"

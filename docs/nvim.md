@@ -77,6 +77,23 @@ File explorer sidebar. `lazy = false` loads it eagerly (not deferred on
 first use). Icons require a Nerd Font installed and set in your terminal
 emulator preferences.
 
+### lewis6991/gitsigns.nvim
+
+Real-time Git gutter signs (added/changed/deleted lines) based on the
+working tree. Updates automatically when external tools (AI agents, scripts)
+modify files — no manual refresh needed. Keymaps are buffer-local via
+`on_attach`, so they only activate in Git-tracked files and don't pollute
+the global keymap space. `current_line_blame` is off by default — use
+`<Space>hb` for blame on demand.
+
+### sindrets/diffview.nvim
+
+Full-screen tabpage showing all changed files with side-by-side diffs.
+Loaded on demand (`cmd = { ... }`) so it doesn't affect startup time.
+Open with `<Space>dv` to review every change the AI agent made in one view;
+close with `<Space>dx`. Can also diff between commits or branches:
+`:DiffviewOpen main..HEAD`.
+
 ---
 
 ## Keymaps
@@ -103,6 +120,25 @@ emulator preferences.
 | `Ctrl+l` | Move to right split |
 | `Ctrl+j` | Move to split below |
 | `Ctrl+k` | Move to split above |
+
+### Gitsigns (hunk actions — buffer-local, git files only)
+
+| Key | Action |
+|-----|--------|
+| `]h` | Jump to next hunk |
+| `[h` | Jump to previous hunk |
+| `<Space>hp` | Preview hunk in popup |
+| `<Space>hi` | Preview hunk inline |
+| `<Space>hs` | Stage hunk |
+| `<Space>hr` | Reset hunk |
+| `<Space>hb` | Full blame for current line |
+
+### Diffview (full-screen diff)
+
+| Key | Action |
+|-----|--------|
+| `<Space>dv` | Open Diffview (all changed files) |
+| `<Space>dx` | Close Diffview |
 
 ---
 

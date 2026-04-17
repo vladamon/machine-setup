@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Start (or reattach to) the dev tmux session.
+# Usage: dev [session-name]   (default: dev)
+
+SESSION="${1:-dev}"
+
+# Reattach if the session is already running
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+  exec tmux attach -t "$SESSION"
+fi
+
+# ── Window 1: main ───────────────────────────────────────────
+# Layout:  nvim (top-left) | lazygit (right, full height)
+#          shell / agent   |
+tmux new-session -d -s "$SESSION" -n main
+
+tmux send-keys    -t "$SESSION:main"   'nvim .' C-m
+tmux split-window -h -t "$SESSION:main"
+tmux send-keys    -t "$SESSION:main"   'lazygit' C-m
+tmux split-window -v -t "$SESSION:main.0"
+tmux select-pane  -t "$SESSION:main.0"
+
+# ── Window 2: servers ─────────────────────────────────────────
+# Layout:  server-a (left) | server-b (right)
+tmux new-window   -t "$SESSION" -n servers
+tmux split-window -h -t "$SESSION:servers"
+tmux select-pane  -t "$SESSION:servers.0"
+
+# ── Window 3: ops ─────────────────────────────────────────────
+# Layout:  commands (top)
+#          output / monitoring (bottom)
+tmux new-window   -t "$SESSION" -n ops
+tmux split-window -v -t "$SESSION:ops"
+tmux select-pane  -t "$SESSION:ops.0"
+
+# ── Window 4: misc ────────────────────────────────────────────
+tmux new-window -t "$SESSION" -n misc
+
+# ── Focus main window, nvim pane ──────────────────────────────
+tmux select-window -t "$SESSION:main"
+
+exec tmux attach -t "$SESSION"

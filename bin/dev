@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 # Start (or reattach to) the dev tmux session.
-# Usage: dev [session-name]   (default: dev)
+# Usage: vlad-dev [code-dir]
+#
+# Code directory resolution (first match wins):
+#   1. $1 argument
+#   2. $CODE_DIR environment variable
+#   3. ~/Documents/code (default)
 
-SESSION="${1:-dev}"
+CODE_PATH="${1:-${CODE_DIR:-$HOME/Documents/code}}"
+SESSION="dev"
 
 # Reattach if the session is already running
 if tmux has-session -t "$SESSION" 2>/dev/null; then
@@ -11,29 +17,29 @@ fi
 
 # ── Window 1: main ───────────────────────────────────────────
 # Layout:  nvim (left) | agent terminal (right)
-tmux new-session -d -s "$SESSION" -n main
+tmux new-session -d -s "$SESSION" -n main -c "$CODE_PATH"
 tmux send-keys    -t "$SESSION:main" 'nvim .' C-m
-tmux split-window -h -t "$SESSION:main"
+tmux split-window -h -t "$SESSION:main" -c "$CODE_PATH"
 tmux select-pane  -t "$SESSION:main.0"
 
 # ── Window 2: git ─────────────────────────────────────────────
-tmux new-window  -t "$SESSION" -n git
+tmux new-window  -t "$SESSION" -n git -c "$CODE_PATH"
 tmux send-keys   -t "$SESSION:git" 'lazygit' C-m
 
 # ── Window 3: servers ─────────────────────────────────────────
 # Layout:  left | right
-tmux new-window   -t "$SESSION" -n servers
-tmux split-window -h -t "$SESSION:servers"
+tmux new-window   -t "$SESSION" -n servers -c "$CODE_PATH"
+tmux split-window -h -t "$SESSION:servers" -c "$CODE_PATH"
 tmux select-pane  -t "$SESSION:servers.0"
 
 # ── Window 4: ops ─────────────────────────────────────────────
 # Layout:  left | right
-tmux new-window   -t "$SESSION" -n ops
-tmux split-window -h -t "$SESSION:ops"
+tmux new-window   -t "$SESSION" -n ops -c "$CODE_PATH"
+tmux split-window -h -t "$SESSION:ops" -c "$CODE_PATH"
 tmux select-pane  -t "$SESSION:ops.0"
 
 # ── Window 5: misc ────────────────────────────────────────────
-tmux new-window -t "$SESSION" -n misc
+tmux new-window -t "$SESSION" -n misc -c "$CODE_PATH"
 
 # ── Focus main window, nvim pane ──────────────────────────────
 tmux select-window -t "$SESSION:main"

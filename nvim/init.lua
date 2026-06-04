@@ -67,6 +67,12 @@ require("lazy").setup({
   },
   {
     "neovim/nvim-lspconfig",
+    config = function()
+      vim.lsp.config("lua_ls", {
+        settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+      })
+      vim.lsp.enable({ "pyright", "ts_ls", "lua_ls" })
+    end,
   },
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -110,6 +116,22 @@ require("lazy").setup({
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles" },
   },
+})
+
+-- LSP keymaps — only active when a server attaches to a buffer
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(event)
+    local map = function(keys, func, desc)
+      vim.keymap.set("n", keys, func, { buffer = event.buf, desc = desc })
+    end
+    map("gd",         vim.lsp.buf.definition,                          "Go to definition")
+    map("gD",         vim.lsp.buf.declaration,                         "Go to declaration")
+    map("gr",         require("telescope.builtin").lsp_references,     "References")
+    map("<leader>ld", require("telescope.builtin").lsp_definitions,    "Definitions (Telescope)")
+    map("K",          vim.lsp.buf.hover,                               "Hover docs")
+    map("<leader>rn", vim.lsp.buf.rename,                              "Rename symbol")
+    map("<leader>ca", vim.lsp.buf.code_action,                         "Code action")
+  end,
 })
 
 -- telescope shortcuts

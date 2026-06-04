@@ -60,16 +60,21 @@ auto-installed. `:TSUpdate` runs on update to fetch the latest parsers.
 
 ### neovim/nvim-lspconfig
 
-Official LSP client configuration helper. Provides the framework to connect
-NeoVim to language servers. Language servers are installed separately.
+LSP client configuration. Ships server definitions (cmd, filetypes, root
+detection) for hundreds of language servers. In Neovim 0.11+, these
+definitions are picked up automatically — you enable servers with
+`vim.lsp.enable()` rather than calling `setup()` on each one.
 
-To add a language server, append to `init.lua`:
-```lua
-require("lspconfig").pyright.setup({})   -- Python
-require("lspconfig").ts_ls.setup({})     -- TypeScript/JavaScript
-```
+Servers currently enabled: `pyright` (Python), `ts_ls` (TypeScript/JS),
+`lua_ls` (Lua). Binaries are installed by `install.sh`.
 
-Then install the server via Homebrew or npm as appropriate.
+To add a language server:
+1. Install the binary (Homebrew or npm)
+2. Add the name to `vim.lsp.enable({...})` in `init.lua`
+3. If you need non-default settings, add a `vim.lsp.config("name", {...})` call before `vim.lsp.enable`
+
+LSP keymaps are buffer-local and only activate when a server attaches
+(via the `LspAttach` autocommand). They never pollute buffers without LSP.
 
 ### nvim-neo-tree/neo-tree.nvim
 
@@ -132,6 +137,19 @@ close with `<Space>dx`. Can also diff between commits or branches:
 | `<Space>hs` | Stage hunk |
 | `<Space>hr` | Reset hunk |
 | `<Space>hb` | Full blame for current line |
+
+### LSP (buffer-local — only in files with a language server)
+
+| Key | Action |
+|-----|--------|
+| `gd` | Jump to definition |
+| `gD` | Jump to declaration |
+| `gr` | All references (Telescope picker) |
+| `<Space>ld` | Definitions (Telescope picker — useful with multiple results) |
+| `K` | Hover documentation popup |
+| `<Space>rn` | Rename symbol across files |
+| `<Space>ca` | Code actions (auto-imports, quick fixes) |
+| `<C-o>` | Jump back after `gd` (built-in Neovim jump list) |
 
 ### Diffview (full-screen diff)
 

@@ -34,7 +34,7 @@ fi
 # ── Packages ─────────────────────────────────────────────────
 echo ""
 echo "Checking packages..."
-for pkg in tmux neovim ripgrep lazygit git-delta; do
+for pkg in tmux neovim ripgrep lazygit git-delta lua-language-server; do
   if brew list --formula "$pkg" &>/dev/null 2>&1; then
     skip "$pkg"
   else
@@ -49,12 +49,14 @@ echo "Checking Node.js tooling..."
 if ! command -v npm &>/dev/null; then
   echo "  npm not found — install Node.js (e.g. via nvm) then re-run."
 else
-  if npm list -g tree-sitter-cli --depth=0 &>/dev/null 2>&1; then
-    skip "tree-sitter-cli"
-  else
-    npm install -g tree-sitter-cli --silent
-    ok "tree-sitter-cli installed"
-  fi
+  for pkg in tree-sitter-cli pyright typescript typescript-language-server; do
+    if npm list -g "$pkg" --depth=0 &>/dev/null 2>&1; then
+      skip "$pkg"
+    else
+      npm install -g "$pkg" --silent
+      ok "$pkg installed"
+    fi
+  done
 fi
 
 # ── Symlink helper ───────────────────────────────────────────

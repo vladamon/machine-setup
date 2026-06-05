@@ -40,7 +40,9 @@ nvim
 Plugins install automatically on first launch via lazy.nvim. Wait for the
 progress window to complete, then restart NeoVim.
 
-## Updating configs
+## Updating
+
+### Config file changes (tmux, nvim, git, lazygit)
 
 Configs are symlinked from this repo, so edits on the machine are already
 in the repo. To sync changes across machines:
@@ -60,6 +62,28 @@ git pull
 
 To update NeoVim plugins: open NeoVim, run `:Lazy update`, then commit the
 updated `nvim/lazy-lock.json`.
+
+### When install.sh itself changes (new packages or symlinks)
+
+If the repo adds new Homebrew/npm packages or new symlink entries, re-run
+the script after pulling:
+
+```bash
+git pull
+./install.sh
+```
+
+The script is safe to re-run on an existing machine. It checks what is
+already in place and skips it — you will see `[SKIP]` for everything
+already installed or linked, and `[OK]` only for what is genuinely new.
+No uninstalling or starting from scratch is required.
+
+**What the script does not do on re-run:**
+
+- Upgrade packages that are already installed. Run `brew upgrade` or
+  `npm update -g <pkg>` manually when you want to update a tool's version.
+- Remove packages that were deleted from the script's lists. Uninstall
+  those manually with `brew uninstall` / `npm uninstall -g`.
 
 ## Docs
 
